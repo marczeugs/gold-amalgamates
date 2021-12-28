@@ -1,0 +1,23 @@
+{
+    "required": true,
+    "package": "marczeugs.goldamalgamates.mixin",
+    "compatibilityLevel": "JAVA_16",
+    "mixins": [
+        "common.EnchantmentHelperMixin",
+        "common.ItemMixin",
+        "common.ItemStackMixin",
+        "common.MiningToolItemAccessor",
+        "common.MiningToolItemMixin",
+        "common.SmithingScreenHandlerMixin",
+        "common.SwordItemMixin",
+        "common.ToolItemMixin"
+    ],
+    "client": [
+        "client.ClientPlayerInteractionManagerMixin",
+        "client.ItemRendererAccessor",
+        "client.ItemRendererMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+  }
+}
