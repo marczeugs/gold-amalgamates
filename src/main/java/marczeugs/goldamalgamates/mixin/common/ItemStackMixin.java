@@ -8,7 +8,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin implements ItemStackExtension {
@@ -37,15 +39,17 @@ public class ItemStackMixin implements ItemStackExtension {
         return ItemStackMixinImpl.getStackMaxDamage((ItemStack) (Object) this);
     }
 
-    @Redirect(
+    @Inject(
         method = "isSuitableFor(Lnet/minecraft/block/BlockState;)Z",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/item/Item;isSuitableFor(Lnet/minecraft/block/BlockState;)Z"
-        )
+        at = @At("HEAD"),
+        cancellable = true
     )
-    public boolean isSuitableFor(Item item, BlockState state) {
-        return ItemStackMixinImpl.isSuitableFor((ItemStack) (Object) this, state);
+    public void isSuitableFor(BlockState state, CallbackInfoReturnable<Boolean> cir) {
+        Boolean isSuitableFor = ItemStackMixinImpl.isSuitableFor((ItemStack) (Object) this, state);
+
+        if (isSuitableFor != null) {
+            cir.setReturnValue(ItemStackMixinImpl.isSuitableFor((ItemStack) (Object) this, state));
+        }
     }
 
     @Redirect(

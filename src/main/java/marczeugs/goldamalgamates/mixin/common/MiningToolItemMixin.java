@@ -5,7 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.MiningToolItem;
 import net.minecraft.item.ToolMaterial;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,7 +21,7 @@ public class MiningToolItemMixin implements MiningToolItemExtension {
     }
 
     @Inject(
-        method = "<init>(FFLnet/minecraft/item/ToolMaterial;Lnet/minecraft/tag/Tag;Lnet/minecraft/item/Item$Settings;)V",
+        method = "<init>(FFLnet/minecraft/item/ToolMaterial;Lnet/minecraft/tag/TagKey;Lnet/minecraft/item/Item$Settings;)V",
         at = @At(
             value = "INVOKE",
             target = "Lcom/google/common/collect/ImmutableMultimap;builder()Lcom/google/common/collect/ImmutableMultimap$Builder;",
@@ -29,7 +29,7 @@ public class MiningToolItemMixin implements MiningToolItemExtension {
             remap = false
         )
     )
-    public void setAttackSpeed(float attackDamage, float attackSpeed, ToolMaterial material, Tag<Block> effectiveBlocks, Item.Settings settings, CallbackInfo c) {
+    public void setAttackSpeed(float attackDamage, float attackSpeed, ToolMaterial material, TagKey<Block> effectiveBlocks, Item.Settings settings, CallbackInfo c) {
         this.attackSpeed = attackSpeed;
     }
 }
