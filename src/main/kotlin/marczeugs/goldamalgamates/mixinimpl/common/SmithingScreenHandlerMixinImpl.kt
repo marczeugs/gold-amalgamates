@@ -14,7 +14,7 @@ import net.minecraft.world.World
 object SmithingScreenHandlerMixinImpl {
     @JvmStatic
     fun addAmalgamateRecipes(recipeManager: RecipeManager, recipeType: RecipeType<SmithingRecipe>, inventory: Inventory, world: World) =
-        recipeManager.getAllMatches(recipeType, inventory, world) + GoldAmalgamatesMod.amalgamateRecipes.filter { recipeType.match(it, world, inventory).isPresent }
+        recipeManager.getAllMatches(recipeType, inventory, world) + GoldAmalgamatesMod.amalgamateRecipes.filter { it.matches(inventory, world) }
 
     @JvmStatic
     fun addAmalgamateToStack(amalgamate: Amalgamate, stack: ItemStack) {

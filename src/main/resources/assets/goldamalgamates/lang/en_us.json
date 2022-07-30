@@ -18,7 +18,7 @@
     "goldamalgamates.enchantabilityincrease.description": "%d (+%d) Enchantability",
     "goldamalgamates.attackdamageincrease.description": "+%d Attack Damage",
     "goldamalgamates.autorepair.description": "Repairs %d durability every %d seconds",
-    "goldamalgamates.shield.description.line1": "After %d seconds without use",
-    "goldamalgamates.shield.description.line2": "  gains a shield up to %d%% durability",
+    "goldamalgamates.shield.description.line1": "Gains a %d%% durability shield",
+    "goldamalgamates.shield.description.line2": "  after %d seconds without use",
     "goldamalgamates.shield.currentvalue": "Current shield: %d / %d"
 }

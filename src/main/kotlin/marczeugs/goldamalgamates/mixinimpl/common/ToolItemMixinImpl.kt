@@ -11,9 +11,7 @@ import net.minecraft.item.ToolItem
 import net.minecraft.nbt.NbtInt
 import net.minecraft.nbt.NbtList
 import net.minecraft.nbt.NbtString
-import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.world.World
 import kotlin.math.floor
@@ -76,9 +74,9 @@ object ToolItemMixinImpl {
         (stack.item as ToolItemExtension).getAmalgamateSlots(stack)?.let { slots ->
             if (slots.isNotEmpty()) {
                 tooltip.add(
-                    TranslatableText("${GoldAmalgamatesMod.MOD_ID}.tooltip.list").apply {
+                    Text.translatable("${GoldAmalgamatesMod.MOD_ID}.tooltip.list").apply {
                         slots.take(2).forEachIndexed { index, amalgamate ->
-                            append(TranslatableText("${GoldAmalgamatesMod.MOD_ID}.${amalgamate.serializedName}.name"))
+                            append(Text.translatable("${GoldAmalgamatesMod.MOD_ID}.${amalgamate.serializedName}.name"))
 
                             if (index < slots.size - 1) {
                                 append(Text.of(", "))
@@ -89,9 +87,9 @@ object ToolItemMixinImpl {
 
                 if (slots.size > 2) {
                     tooltip.add(
-                        LiteralText("").apply {
+                        Text.empty().apply {
                             slots.withIndex().drop(2).forEach { (index, amalgamate) ->
-                                append(TranslatableText("${GoldAmalgamatesMod.MOD_ID}.${amalgamate.serializedName}.name"))
+                                append(Text.translatable("${GoldAmalgamatesMod.MOD_ID}.${amalgamate.serializedName}.name"))
 
                                 if (index < slots.size - 1) {
                                     append(Text.of(", "))
@@ -103,49 +101,49 @@ object ToolItemMixinImpl {
 
                 slots.sumOf { it.miningLevelIncrease }.takeIf { it > 0 }?.let {
                     val miningLevelText = when ((stack.item as ToolItem).material.miningLevel + it) {
-                        MiningLevels.HAND -> TranslatableText("${GoldAmalgamatesMod.MOD_ID}.mininglevel.hand")
-                        MiningLevels.WOOD -> TranslatableText("${GoldAmalgamatesMod.MOD_ID}.mininglevel.wood")
-                        MiningLevels.STONE -> TranslatableText("${GoldAmalgamatesMod.MOD_ID}.mininglevel.stone")
-                        MiningLevels.IRON -> TranslatableText("${GoldAmalgamatesMod.MOD_ID}.mininglevel.iron")
-                        MiningLevels.DIAMOND -> TranslatableText("${GoldAmalgamatesMod.MOD_ID}.mininglevel.diamond")
-                        else -> TranslatableText("${GoldAmalgamatesMod.MOD_ID}.mininglevel.netherite")
+                        MiningLevels.HAND -> Text.translatable("${GoldAmalgamatesMod.MOD_ID}.mininglevel.hand")
+                        MiningLevels.WOOD -> Text.translatable("${GoldAmalgamatesMod.MOD_ID}.mininglevel.wood")
+                        MiningLevels.STONE -> Text.translatable("${GoldAmalgamatesMod.MOD_ID}.mininglevel.stone")
+                        MiningLevels.IRON -> Text.translatable("${GoldAmalgamatesMod.MOD_ID}.mininglevel.iron")
+                        MiningLevels.DIAMOND -> Text.translatable("${GoldAmalgamatesMod.MOD_ID}.mininglevel.diamond")
+                        else -> Text.translatable("${GoldAmalgamatesMod.MOD_ID}.mininglevel.netherite")
                     }
 
-                    tooltip.add(TranslatableText("${GoldAmalgamatesMod.MOD_ID}.mininglevel.description").append(miningLevelText).formatted(Formatting.DARK_GRAY))
+                    tooltip.add(Text.translatable("${GoldAmalgamatesMod.MOD_ID}.mininglevel.description").append(miningLevelText).formatted(Formatting.DARK_GRAY))
                 }
 
                 (slots.sumOf { it.flatDurabilityIncrease } to slots.fold(1.0) { acc, next -> acc * (1.0 + next.percentDurabilityIncrease) })
                     .takeIf { (flat, percent) -> flat > 0 || percent > 1f }
                     ?.let { (flat, percent) ->
-                        tooltip.add(TranslatableText("${GoldAmalgamatesMod.MOD_ID}.durabilityincrease.description", flat, ((percent - 1f) * 100).roundToInt()).formatted(Formatting.DARK_GRAY))
+                        tooltip.add(Text.translatable("${GoldAmalgamatesMod.MOD_ID}.durabilityincrease.description", flat, ((percent - 1f) * 100).roundToInt()).formatted(Formatting.DARK_GRAY))
                     }
 
                 slots.sumOf { it.enchantabilityIncrease }.takeIf { it > 0 }?.let {
-                    tooltip.add(TranslatableText("${GoldAmalgamatesMod.MOD_ID}.enchantabilityincrease.description", (stack.item as ToolItem).material.enchantability + it, it).formatted(Formatting.DARK_GRAY))
+                    tooltip.add(Text.translatable("${GoldAmalgamatesMod.MOD_ID}.enchantabilityincrease.description", (stack.item as ToolItem).material.enchantability + it, it).formatted(Formatting.DARK_GRAY))
                 }
 
                 slots.count { it == Amalgamate.Emerald }.takeIf { it > 0 }?.let {
-                    tooltip.add(TranslatableText("${GoldAmalgamatesMod.MOD_ID}.autorepair.description", it, Amalgamate.Emerald.TICKS_PER_REPAIR / 20).formatted(Formatting.DARK_GRAY))
+                    tooltip.add(Text.translatable("${GoldAmalgamatesMod.MOD_ID}.autorepair.description", it, Amalgamate.Emerald.TICKS_PER_REPAIR / 20).formatted(Formatting.DARK_GRAY))
                 }
 
                 slots.count { it == Amalgamate.Copper }.takeIf { it > 0 }?.let {
                     tooltip.add(
-                        TranslatableText(
+                        Text.translatable(
                             "${GoldAmalgamatesMod.MOD_ID}.shield.description.line1",
-                            (Amalgamate.Copper.BASE_SHIELD_RECHARGE_TIMEOUT_TICKS + Amalgamate.Copper.SHIELD_RECHARGE_TIMEOUT_TICKS_DIFF_PER_SLOT * it) / 20
+                            (Amalgamate.Copper.SHIELD_PERCENT_PER_SLOT * it * 100).roundToInt()
                         ).formatted(Formatting.DARK_GRAY)
                     )
 
                     tooltip.add(
-                        TranslatableText(
+                        Text.translatable(
                             "${GoldAmalgamatesMod.MOD_ID}.shield.description.line2",
-                            (Amalgamate.Copper.SHIELD_PERCENT_PER_SLOT * it * 100).roundToInt()
+                            (Amalgamate.Copper.BASE_SHIELD_RECHARGE_TIMEOUT_TICKS + Amalgamate.Copper.SHIELD_RECHARGE_TIMEOUT_TICKS_DIFF_PER_SLOT * it) / 20
                         ).formatted(Formatting.DARK_GRAY)
                     )
 
                     @Suppress("CAST_NEVER_SUCCEEDS")
                     tooltip.add(
-                        TranslatableText(
+                        Text.translatable(
                             "${GoldAmalgamatesMod.MOD_ID}.shield.currentvalue",
                             (stack as ItemStackExtension).currentShield,
                             floor(it * Amalgamate.Copper.SHIELD_PERCENT_PER_SLOT * stack.maxDamage).roundToInt()
@@ -158,7 +156,7 @@ object ToolItemMixinImpl {
                 }*/
 
                 if (stack.hasEnchantments()) {
-                    tooltip.add(LiteralText.EMPTY)
+                    tooltip.add(Text.empty())
                 }
             }
         }

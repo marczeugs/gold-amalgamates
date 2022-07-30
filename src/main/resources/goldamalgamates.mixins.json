@@ -14,10 +14,12 @@
     ],
     "client": [
         "client.ClientPlayerInteractionManagerMixin",
+        "client.HeldItemRendererMixin",
+        "client.HeldItemRendererAccessor",
         "client.ItemRendererAccessor",
         "client.ItemRendererMixin"
     ],
     "injectors": {
         "defaultRequire": 1
-  }
+    }
 }

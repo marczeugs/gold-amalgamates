@@ -75,7 +75,7 @@ public class ItemStackMixin implements ItemStackExtension {
     }
 
     @Redirect(
-        method = "damage(ILjava/util/Random;Lnet/minecraft/server/network/ServerPlayerEntity;)Z",
+        method = "damage(ILnet/minecraft/util/math/random/Random;Lnet/minecraft/server/network/ServerPlayerEntity;)Z",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/item/ItemStack;setDamage(I)V"
